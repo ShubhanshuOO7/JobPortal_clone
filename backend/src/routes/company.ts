@@ -3,6 +3,10 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import { json } from 'body-parser';
 import cookieParser from 'cookie-parser';
 import express,{Request,Response} from 'express'
+import { singleUpload } from '../middlewares/multer';
+import getDataUri from '../utils/datauri';
+import cloudinary from '../utils/cloudinary';
+import { log } from 'console';
  export const companyRouter = express();
 companyRouter.use(express.json());
 companyRouter.use(cookieParser());
@@ -107,11 +111,13 @@ companyRouter.get('/getById/:id',async(req:Request<Params>,res)=>{
 interface update{
     id? : number
 }
-companyRouter.put('/update/:id',async(req:Request<update>,res)=>{
+companyRouter.put('/update/:id',singleUpload,async(req:Request<update>,res)=>{
     const {companyName,description,website,location} = req.body
-  //  const file = req.file;
+    const file = req.file;
     // idhar cloudinary aayega
-    const userId = req.params.id
+    const fileUri = getDataUri(file);
+    const cloudResponse = await cloudinary.uploader.upload(fileUri?.content || "");
+    const companyId = req.params.id
     if(!companyName && !description && !website && !location){
         return res.json({
             message : "Something is missing",
@@ -121,15 +127,15 @@ companyRouter.put('/update/:id',async(req:Request<update>,res)=>{
     const prisma = new PrismaClient({
         datasourceUrl : process.env.DATABASE_URL
     })
-    const company = await prisma.company.updateMany({
+    const company = await prisma.company.update({
         where:{
-           userId : Number(userId)  
+            id : Number(companyId) 
         },
         data:{
-           companyName : req.body.companyName,
-           descriptions : req.body.descriptions,
+           descriptions : req.body.description,
            website : req.body.website,
-           location : req.body.location
+           location: req.body.location,
+           logo : cloudResponse.secure_url
         }
     })
     if(!company){

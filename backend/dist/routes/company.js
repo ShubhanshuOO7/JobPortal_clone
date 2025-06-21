@@ -17,6 +17,9 @@ const middleware_1 = require("../middlewares/middleware");
 const client_1 = require("@prisma/client");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const express_1 = __importDefault(require("express"));
+const multer_1 = require("../middlewares/multer");
+const datauri_1 = __importDefault(require("../utils/datauri"));
+const cloudinary_1 = __importDefault(require("../utils/cloudinary"));
 exports.companyRouter = (0, express_1.default)();
 exports.companyRouter.use(express_1.default.json());
 exports.companyRouter.use((0, cookie_parser_1.default)());
@@ -111,11 +114,13 @@ exports.companyRouter.get('/getById/:id', (req, res) => __awaiter(void 0, void 0
         console.log(error);
     }
 }));
-exports.companyRouter.put('/update/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.companyRouter.put('/update/:id', multer_1.singleUpload, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { companyName, description, website, location } = req.body;
-    //  const file = req.file;
+    const file = req.file;
     // idhar cloudinary aayega
-    const userId = req.params.id;
+    const fileUri = (0, datauri_1.default)(file);
+    const cloudResponse = yield cloudinary_1.default.uploader.upload((fileUri === null || fileUri === void 0 ? void 0 : fileUri.content) || "");
+    const companyId = req.params.id;
     if (!companyName && !description && !website && !location) {
         return res.json({
             message: "Something is missing",
@@ -125,15 +130,15 @@ exports.companyRouter.put('/update/:id', (req, res) => __awaiter(void 0, void 0,
     const prisma = new client_1.PrismaClient({
         datasourceUrl: process.env.DATABASE_URL
     });
-    const company = yield prisma.company.updateMany({
+    const company = yield prisma.company.update({
         where: {
-            userId: Number(userId)
+            id: Number(companyId)
         },
         data: {
-            companyName: req.body.companyName,
-            descriptions: req.body.descriptions,
+            descriptions: req.body.description,
             website: req.body.website,
-            location: req.body.location
+            location: req.body.location,
+            logo: cloudResponse.secure_url
         }
     });
     if (!company) {

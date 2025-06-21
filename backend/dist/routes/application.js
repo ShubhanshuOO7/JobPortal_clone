@@ -25,52 +25,48 @@ exports.applyRouter.post("/applyJob/:id", (req, res) => __awaiter(void 0, void 0
         if (!jobId) {
             return res.status(400).json({
                 message: "Job Id is required",
-                success: false
+                success: false,
             });
         }
         const prisma = new client_1.PrismaClient({
-            datasourceUrl: process.env.DATABASE_URL
+            datasourceUrl: process.env.DATABASE_URL,
         });
         const existingApplication = yield prisma.applications.findFirst({
             where: {
-                job: {
-                    some: {
-                        id: Number(jobId) // we use some to check the array of related id
-                    }
-                },
-                applicant: {
-                    id: Number(userId) // and applicant is not a array relation that why we use normally
-                }
-            }
+                jobId: Number(jobId),
+                applicantId: Number(userId),
+            },
         });
         if (existingApplication) {
             return res.status(400).json({
                 message: "You have already applied for this jobs",
-                success: false
+                success: false,
             });
         }
         const job = yield prisma.job.findFirst({
             where: {
-                id: Number(jobId)
-            }
+                id: Number(jobId),
+            },
         });
         if (!job) {
             return res.status(400).json({
                 message: "Job not found",
-                success: false
+                success: false,
             });
         }
         const newApplication = yield prisma.applications.create({
             data: {
                 job: {
-                    connect: { id: Number(jobId) }
+                    connect: { id: Number(jobId) },
                 },
-                applicantId: Number(userId)
-            }
+                applicant: {
+                    connect: { id: Number(userId) },
+                },
+            },
         });
         return res.status(201).json({
             message: "job applied successfully",
-            success: true
+            success: true,
         });
     }
     catch (error) {
@@ -81,11 +77,11 @@ exports.applyRouter.get("/getAppliedJobs", (req, res) => __awaiter(void 0, void 
     try {
         const userId = req.id;
         const prisma = new client_1.PrismaClient({
-            datasourceUrl: process.env.DATABASE_URL
+            datasourceUrl: process.env.DATABASE_URL,
         });
         const application = yield prisma.applications.findMany({
             where: {
-                id: Number(userId)
+                applicantId: Number(userId),
             },
             include: {
                 job: {
@@ -98,12 +94,12 @@ exports.applyRouter.get("/getAppliedJobs", (req, res) => __awaiter(void 0, void 
         if (!application) {
             return res.status(404).json({
                 message: "No Applications",
-                success: false
+                success: false,
             });
         }
         return res.status(200).json({
             application,
-            success: true
+            success: true,
         });
     }
     catch (error) {
@@ -115,29 +111,34 @@ exports.applyRouter.get("/getApplicants/:id", (req, res) => __awaiter(void 0, vo
     try {
         const jobId = req.params.id;
         const prisma = new client_1.PrismaClient({
-            datasourceUrl: process.env.DATABASE_URL
+            datasourceUrl: process.env.DATABASE_URL,
         });
         const Jobs = yield prisma.job.findMany({
             where: {
-                id: Number(jobId)
+                id: Number(jobId),
             },
             include: {
+                // getting value of users by job -> applications -> applicant
                 applications: {
                     include: {
-                        applicant: true
-                    }
-                }
-            }
+                        applicant: {
+                            include: {
+                                profile: true,
+                            },
+                        },
+                    },
+                },
+            },
         });
         if (!Jobs) {
             return res.status(400).json({
                 meesage: "Jobs not found",
-                success: false
+                success: false,
             });
         }
         return res.status(200).json({
             Jobs,
-            successs: true
+            successs: true,
         });
     }
     catch (error) {
@@ -146,30 +147,43 @@ exports.applyRouter.get("/getApplicants/:id", (req, res) => __awaiter(void 0, vo
 }));
 exports.applyRouter.put("/updateStatus/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const status = req.body;
+        const { status } = req.body;
         const applicantId = req.params.id;
-        const prisma = new client_1.PrismaClient({
-            datasourceUrl: process.env.DATABASE_URL
-        });
-        const application = yield prisma.applications.findFirst({
-            where: {
-                id: Number(applicantId)
-            }
-        });
-        if (!application) {
-            return res.status(404).jsonp({
-                message: "Application not found",
-                success: false
+        const allowed = ["pending", "accepted", "rejected"];
+        if (!allowed.includes(status === null || status === void 0 ? void 0 : status.toLowerCase())) {
+            return res.status(400).json({
+                message: "Invalid status value",
+                success: false,
             });
         }
-        application.status = status.toString().toLowerCase();
+        const prisma = new client_1.PrismaClient({
+            datasourceUrl: process.env.DATABASE_URL,
+        });
+        const application = yield prisma.applications.update({
+            where: {
+                id: Number(applicantId),
+            },
+            data: {
+                status: status.toLowerCase(), // ✅ cast to enum
+            },
+        });
+        if (!application) {
+            return res.status(404).json({
+                message: "Application not found",
+                success: false,
+            });
+        }
         return res.status(200).json({
             message: "Status updated successfully",
-            suucess: true,
-            application
+            success: true,
+            application,
         });
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false,
+        });
     }
 }));

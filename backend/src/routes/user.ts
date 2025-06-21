@@ -28,7 +28,6 @@ userRouter.post("/signup",singleUpload,async (req:Request,res:Response) => {
       });
     }
     const file = req.file;
-    console.log(file);
     const fileUri = getDataUri(file);
     const cloudResponse = await cloudinary.uploader.upload(fileUri.content ?? "") ;
     const prisma = new PrismaClient({
@@ -77,7 +76,7 @@ userRouter.post("/signup",singleUpload,async (req:Request,res:Response) => {
         },
         process.env.JWT_SECRET || "",
         {
-          expiresIn: "1h",
+          expiresIn: "2h",
         }
       );
       return res
@@ -138,7 +137,7 @@ userRouter.post("/login",async(req,res)=>{
         status: false
       })
     }
-    const token = await jwt.sign({userId : user.id},process.env.JWT_SECRET || "",{expiresIn: "1h"})
+    const token = await jwt.sign({userId : user.id},process.env.JWT_SECRET || "",{expiresIn: "24h"})
     const userResponse = {
       id : user.id,
       fullName : user.fullName,
@@ -186,10 +185,8 @@ userRouter.post("/update",userMiddleware,singleUpload,async(req:Request,res:Resp
       })
     }
     const file = req.file;
-   // console.log(file);
     const fileUri = getDataUri(file);
-    console.log(fileUri.content);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content ?? "");
+    const cloudResponse = await cloudinary.uploader.upload(fileUri.content ?? "", );
 
 
 

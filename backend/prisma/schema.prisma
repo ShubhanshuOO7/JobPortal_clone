@@ -48,7 +48,7 @@ model Job {
   salary       Int
   location     String
   jobType      String
-  position     String
+  position     Int
   companyId    Int
   user         User?           @relation(fields: [createdBy], references: [id])
   company      Company         @relation(fields: [companyId],references: [id])     
@@ -72,13 +72,14 @@ model Company {
 
 model Applications {
   id          Int                @id @default(autoincrement())
-  job         Job[]
+  jobId       Int?
+  job         Job?                @relation(fields: [jobId], references: [id])
   applicantId Int
   applicant   User               @relation(fields: [applicantId], references: [id])
-  status      ApplicantionStatus @default(pending)
+  status      ApplicationStatus @default(pending)
 }
 
-enum ApplicantionStatus {
+enum ApplicationStatus {
   pending
   accepted
   rejected

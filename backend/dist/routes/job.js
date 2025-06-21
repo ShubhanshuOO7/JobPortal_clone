@@ -42,7 +42,7 @@ exports.jobRouter.post("/jobPost", middleware_1.userMiddleware, (req, res) => __
                 location,
                 jobType,
                 experience: Number(experience),
-                position,
+                position: Number(position),
                 companyId: Number(companyId),
                 createdBy: Number(userId)
             }
@@ -60,30 +60,32 @@ exports.jobRouter.post("/jobPost", middleware_1.userMiddleware, (req, res) => __
 //students ke liye
 exports.jobRouter.get("/get", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const keyWord = req.query.keyWord || "";
+        const keyword = req.query.keyword || "";
         const prisma = new client_1.PrismaClient({
             datasourceUrl: process.env.DATABASE_URL
         });
         const jobs = yield prisma.job.findMany({
-            where: {
-                OR: [
-                    {
-                        title: {
-                            contains: keyWord,
-                            mode: "insensitive"
+            where: keyword
+                ? {
+                    OR: [
+                        {
+                            title: {
+                                contains: keyword,
+                                mode: "insensitive",
+                            },
                         },
-                    },
-                    {
-                        description: {
-                            contains: keyWord,
-                            mode: "insensitive"
-                        }
-                    }
-                ]
-            },
+                        {
+                            description: {
+                                contains: keyword,
+                                mode: "insensitive",
+                            },
+                        },
+                    ],
+                }
+                : {}, // return all if no keyword
             include: {
-                company: true
-            }
+                company: true,
+            },
         });
         if (!jobs) {
             return res.status(401).json({
@@ -136,6 +138,9 @@ exports.jobRouter.get("/getAdminJobs", (req, res) => __awaiter(void 0, void 0, v
         const jobs = yield prisma.job.findMany({
             where: {
                 createdBy: Number(adminId)
+            },
+            include: {
+                company: true
             }
         });
         if (!jobs) {

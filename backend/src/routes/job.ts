@@ -41,7 +41,7 @@ jobRouter.post("/jobPost",userMiddleware,async(req:customRequest,res:Response)=>
             location,
             jobType,
             experience : Number(experience),
-            position,
+            position : Number(position),
             companyId  : Number(companyId),
             createdBy : Number(userId)
         }
@@ -58,32 +58,33 @@ jobRouter.post("/jobPost",userMiddleware,async(req:customRequest,res:Response)=>
 //students ke liye
 jobRouter.get("/get",async(req:Request,res:Response)=>{
     try {
-        const keyWord = req.query.keyWord as string || ""
+        const keyword = req.query.keyword as string || ""
         const prisma = new PrismaClient({
             datasourceUrl : process.env.DATABASE_URL
         })
-        const jobs = await prisma.job.findMany({
-            where:{
-                OR:[
-                    {
-                        title : {
-                            contains : keyWord,
-                            mode : "insensitive"
-                        },
-
-                    },
-                    {
-                        description:{
-                            contains : keyWord,
-                            mode : "insensitive"
-                        }
-                    }
-                ]
-            },
-            include:{
-                company : true
-            }
-        })
+         const jobs = await prisma.job.findMany({
+      where: keyword
+        ? {
+            OR: [
+              {
+                title: {
+                  contains: keyword,
+                  mode: "insensitive",
+                },
+              },
+              {
+                description: {
+                  contains: keyword,
+                  mode: "insensitive",
+                },
+              },
+            ],
+          }
+        : {}, // return all if no keyword
+      include: {
+        company: true,
+      },
+    });
         if(!jobs){
             return res.status(401).json({
                 message : "Jobs not found",
@@ -133,6 +134,9 @@ jobRouter.get("/getAdminJobs",async(req:customRequest,res:Response)=>{
         const jobs = await prisma.job.findMany({
             where:{
                 createdBy : Number(adminId)
+            },
+            include:{
+                company: true
             }
         })
         if(!jobs){

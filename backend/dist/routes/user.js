@@ -81,7 +81,7 @@ exports.userRouter.post("/signup", multer_1.singleUpload, (req, res) => __awaite
         const token = jsonwebtoken_1.default.sign({
             userId: createdUser === null || createdUser === void 0 ? void 0 : createdUser.id,
         }, process.env.JWT_SECRET || "", {
-            expiresIn: "1h",
+            expiresIn: "2h",
         });
         return res
             .status(200)
@@ -141,7 +141,7 @@ exports.userRouter.post("/login", (req, res) => __awaiter(void 0, void 0, void 0
                 status: false
             });
         }
-        const token = yield jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET || "", { expiresIn: "1h" });
+        const token = yield jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET || "", { expiresIn: "24h" });
         const userResponse = {
             id: user.id,
             fullName: user.fullName,
