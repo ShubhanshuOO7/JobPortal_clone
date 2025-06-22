@@ -1,1 +1,1 @@
-export const USER_ENDPOINT = "http://localhost:3000"
+export const USER_ENDPOINT = "https://jobportal-clone.onrender.com"
