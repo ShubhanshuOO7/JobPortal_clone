@@ -5,7 +5,8 @@
     "target": "ES2020",
     "esModuleInterop": true,
     "strict": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "types": ["node"]           // ✅ Add this line
   },
   "include": ["backend/src"]
 }
