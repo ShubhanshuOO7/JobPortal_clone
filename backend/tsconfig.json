@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
-    "module": "commonjs",
-    "target": "ES2020",
-    "esModuleInterop": true,
-    "strict": true,
-    "baseUrl": ".",          // ✅ Add this line
+    "target": "ES2020",                 
+    "module": "commonjs",              
+    "lib": ["ES2020"],                
+    "outDir": "dist",                  
+    "rootDir": "src",                  
+    "esModuleInterop": true,          
+    "strict": true,                   
+    "baseUrl": ".",                   
+    "types": ["node"]                 
   },
-  "include": ["backend/src"]
+  "include": ["src"]                  
 }
