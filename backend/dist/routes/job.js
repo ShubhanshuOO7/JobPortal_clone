@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -20,7 +11,7 @@ const middleware_1 = require("../middlewares/middleware");
 exports.jobRouter.use(express_1.default.json());
 exports.jobRouter.use(middleware_1.userMiddleware);
 //admin
-exports.jobRouter.post("/jobPost", middleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.jobRouter.post("/jobPost", middleware_1.userMiddleware, async (req, res) => {
     try {
         const { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
         const userId = req.id;
@@ -33,7 +24,7 @@ exports.jobRouter.post("/jobPost", middleware_1.userMiddleware, (req, res) => __
         const prisma = new client_1.PrismaClient({
             datasourceUrl: process.env.DATABASE_URL
         });
-        const job = yield prisma.job.create({
+        const job = await prisma.job.create({
             data: {
                 title,
                 description,
@@ -56,15 +47,15 @@ exports.jobRouter.post("/jobPost", middleware_1.userMiddleware, (req, res) => __
     catch (error) {
         console.log(error);
     }
-}));
+});
 //students ke liye
-exports.jobRouter.get("/get", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.jobRouter.get("/get", async (req, res) => {
     try {
         const keyword = req.query.keyword || "";
         const prisma = new client_1.PrismaClient({
             datasourceUrl: process.env.DATABASE_URL
         });
-        const jobs = yield prisma.job.findMany({
+        const jobs = await prisma.job.findMany({
             where: keyword
                 ? {
                     OR: [
@@ -101,14 +92,14 @@ exports.jobRouter.get("/get", (req, res) => __awaiter(void 0, void 0, void 0, fu
     catch (error) {
         console.log(error);
     }
-}));
-exports.jobRouter.get("/getJob/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+exports.jobRouter.get("/getJob/:id", async (req, res) => {
     try {
         const jobId = req.params.id;
         const prisma = new client_1.PrismaClient({
             datasourceUrl: process.env.DATABASE_URL
         });
-        const jobs = yield prisma.job.findFirst({
+        const jobs = await prisma.job.findFirst({
             where: {
                 id: Number(jobId)
             },
@@ -127,15 +118,15 @@ exports.jobRouter.get("/getJob/:id", (req, res) => __awaiter(void 0, void 0, voi
     catch (error) {
         console.log(error);
     }
-}));
+});
 // admin ne kitne job create kare hain abhi tak
-exports.jobRouter.get("/getAdminJobs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.jobRouter.get("/getAdminJobs", async (req, res) => {
     try {
         const adminId = req.id;
         const prisma = new client_1.PrismaClient({
             datasourceUrl: process.env.DATABASE_URL
         });
-        const jobs = yield prisma.job.findMany({
+        const jobs = await prisma.job.findMany({
             where: {
                 createdBy: Number(adminId)
             },
@@ -157,4 +148,4 @@ exports.jobRouter.get("/getAdminJobs", (req, res) => __awaiter(void 0, void 0, v
     catch (error) {
         console.log(error);
     }
-}));
+});

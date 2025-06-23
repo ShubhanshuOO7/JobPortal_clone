@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node backend/src/index.ts",
-    "build": "tsc && npm install --prefix frontend && npm run build --prefix frontend",
-    "start": "node dist/backend/src/index.js"
-  },
+  "dev": "nodemon --exec ts-node backend/src/index.ts",
+  "build": "tsc -p backend && npm install --prefix frontend && npm run build --prefix frontend",
+  "start": "node backend/dist/index.js"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
