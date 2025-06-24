@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -15,7 +24,7 @@ exports.companyRouter = (0, express_1.default)();
 exports.companyRouter.use(express_1.default.json());
 exports.companyRouter.use((0, cookie_parser_1.default)());
 exports.companyRouter.use(middleware_1.userMiddleware);
-exports.companyRouter.post('/registration', middleware_1.userMiddleware, async (req, res) => {
+exports.companyRouter.post('/registration', middleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { companyName } = req.body;
         if (!companyName) {
@@ -27,7 +36,7 @@ exports.companyRouter.post('/registration', middleware_1.userMiddleware, async (
         const prisma = new client_1.PrismaClient({
             datasourceUrl: process.env.DATABASE_URL,
         });
-        const existingcompany = await prisma.company.findUnique({
+        const existingcompany = yield prisma.company.findUnique({
             where: {
                 companyName: req.body.companyName
             }
@@ -37,7 +46,7 @@ exports.companyRouter.post('/registration', middleware_1.userMiddleware, async (
                 message: "You can't register the same company",
             });
         }
-        let company = await prisma.company.create({
+        let company = yield prisma.company.create({
             data: {
                 companyName: companyName,
                 userId: req.id
@@ -52,14 +61,14 @@ exports.companyRouter.post('/registration', middleware_1.userMiddleware, async (
     catch (error) {
         console.log(error);
     }
-});
-exports.companyRouter.get('/get', middleware_1.userMiddleware, async (req, res) => {
+}));
+exports.companyRouter.get('/get', middleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = req.id;
         const prisma = new client_1.PrismaClient({
             datasourceUrl: process.env.DATABASE_URL
         });
-        const companies = await prisma.company.findMany({
+        const companies = yield prisma.company.findMany({
             where: {
                 userId: userId
             }
@@ -78,14 +87,14 @@ exports.companyRouter.get('/get', middleware_1.userMiddleware, async (req, res) 
     catch (error) {
         console.log(error);
     }
-});
-exports.companyRouter.get('/getById/:id', async (req, res) => {
+}));
+exports.companyRouter.get('/getById/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const companyId = req.params.id;
         const prisma = new client_1.PrismaClient({
             datasourceUrl: process.env.DATABASE_URL
         });
-        const company = await prisma.company.findFirst({
+        const company = yield prisma.company.findFirst({
             where: {
                 id: Number(companyId)
             }
@@ -104,13 +113,13 @@ exports.companyRouter.get('/getById/:id', async (req, res) => {
     catch (error) {
         console.log(error);
     }
-});
-exports.companyRouter.put('/update/:id', multer_1.singleUpload, async (req, res) => {
+}));
+exports.companyRouter.put('/update/:id', multer_1.singleUpload, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { companyName, description, website, location } = req.body;
     const file = req.file;
     // idhar cloudinary aayega
     const fileUri = (0, datauri_1.default)(file);
-    const cloudResponse = await cloudinary_1.default.uploader.upload(fileUri?.content || "");
+    const cloudResponse = yield cloudinary_1.default.uploader.upload((fileUri === null || fileUri === void 0 ? void 0 : fileUri.content) || "");
     const companyId = req.params.id;
     if (!companyName && !description && !website && !location) {
         return res.json({
@@ -121,7 +130,7 @@ exports.companyRouter.put('/update/:id', multer_1.singleUpload, async (req, res)
     const prisma = new client_1.PrismaClient({
         datasourceUrl: process.env.DATABASE_URL
     });
-    const company = await prisma.company.update({
+    const company = yield prisma.company.update({
         where: {
             id: Number(companyId)
         },
@@ -142,4 +151,4 @@ exports.companyRouter.put('/update/:id', multer_1.singleUpload, async (req, res)
         message: "Company information updated",
         success: true
     });
-});
+}));

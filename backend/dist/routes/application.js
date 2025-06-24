@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -9,7 +18,7 @@ exports.applyRouter = (0, express_1.default)();
 const middleware_1 = require("../middlewares/middleware");
 const client_1 = require("@prisma/client");
 exports.applyRouter.use(middleware_1.userMiddleware);
-exports.applyRouter.post("/applyJob/:id", async (req, res) => {
+exports.applyRouter.post("/applyJob/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = req.id;
         const jobId = req.params.id;
@@ -22,7 +31,7 @@ exports.applyRouter.post("/applyJob/:id", async (req, res) => {
         const prisma = new client_1.PrismaClient({
             datasourceUrl: process.env.DATABASE_URL,
         });
-        const existingApplication = await prisma.applications.findFirst({
+        const existingApplication = yield prisma.applications.findFirst({
             where: {
                 jobId: Number(jobId),
                 applicantId: Number(userId),
@@ -34,7 +43,7 @@ exports.applyRouter.post("/applyJob/:id", async (req, res) => {
                 success: false,
             });
         }
-        const job = await prisma.job.findFirst({
+        const job = yield prisma.job.findFirst({
             where: {
                 id: Number(jobId),
             },
@@ -45,7 +54,7 @@ exports.applyRouter.post("/applyJob/:id", async (req, res) => {
                 success: false,
             });
         }
-        const newApplication = await prisma.applications.create({
+        const newApplication = yield prisma.applications.create({
             data: {
                 job: {
                     connect: { id: Number(jobId) },
@@ -63,14 +72,14 @@ exports.applyRouter.post("/applyJob/:id", async (req, res) => {
     catch (error) {
         console.log(error);
     }
-});
-exports.applyRouter.get("/getAppliedJobs", async (req, res) => {
+}));
+exports.applyRouter.get("/getAppliedJobs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = req.id;
         const prisma = new client_1.PrismaClient({
             datasourceUrl: process.env.DATABASE_URL,
         });
-        const application = await prisma.applications.findMany({
+        const application = yield prisma.applications.findMany({
             where: {
                 applicantId: Number(userId),
             },
@@ -96,15 +105,15 @@ exports.applyRouter.get("/getAppliedJobs", async (req, res) => {
     catch (error) {
         console.log(error);
     }
-});
+}));
 // admin dekhega kitne users ne apply kiya hain
-exports.applyRouter.get("/getApplicants/:id", async (req, res) => {
+exports.applyRouter.get("/getApplicants/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const jobId = req.params.id;
         const prisma = new client_1.PrismaClient({
             datasourceUrl: process.env.DATABASE_URL,
         });
-        const Jobs = await prisma.job.findMany({
+        const Jobs = yield prisma.job.findMany({
             where: {
                 id: Number(jobId),
             },
@@ -135,13 +144,13 @@ exports.applyRouter.get("/getApplicants/:id", async (req, res) => {
     catch (error) {
         console.log(error);
     }
-});
-exports.applyRouter.put("/updateStatus/:id", async (req, res) => {
+}));
+exports.applyRouter.put("/updateStatus/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { status } = req.body;
         const applicantId = req.params.id;
         const allowed = ["pending", "accepted", "rejected"];
-        if (!allowed.includes(status?.toLowerCase())) {
+        if (!allowed.includes(status === null || status === void 0 ? void 0 : status.toLowerCase())) {
             return res.status(400).json({
                 message: "Invalid status value",
                 success: false,
@@ -150,7 +159,7 @@ exports.applyRouter.put("/updateStatus/:id", async (req, res) => {
         const prisma = new client_1.PrismaClient({
             datasourceUrl: process.env.DATABASE_URL,
         });
-        const application = await prisma.applications.update({
+        const application = yield prisma.applications.update({
             where: {
                 id: Number(applicantId),
             },
@@ -177,4 +186,4 @@ exports.applyRouter.put("/updateStatus/:id", async (req, res) => {
             success: false,
         });
     }
-});
+}));
