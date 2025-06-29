@@ -14,7 +14,7 @@ const _dirname = path.resolve(__dirname, "..", ".."); // Path to project root
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'https://jobportal-clone.onrender.com',
   credentials: true
 }));
 
