@@ -1,18 +1,24 @@
 import dotenv from "dotenv";
 import path from "path";
-dotenv.config({ path: path.resolve(__dirname, "../../.env") }); // ✅ Load .env file from root
-
 import express from "express";
+import cors from "cors";
+
 import { userRouter } from "./routes/user";
 import { companyRouter } from "./routes/company";
 import { jobRouter } from "./routes/job";
 import { applyRouter } from "./routes/application";
-import cors from "cors";
 
-const _dirname = path.resolve(__dirname, "..", ".."); // Path to project root
+// Load .env only in development
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
+
+// Root of the project (2 levels up from dist/)
+const __rootdir = path.resolve(__dirname, "..", "..");
 
 const app = express();
 
+// Allow frontend to access backend (CORS)
 app.use(cors({
   origin: 'https://jobportal-clone.onrender.com',
   credentials: true
@@ -20,18 +26,21 @@ app.use(cors({
 
 app.use(express.json());
 
+// Backend API routes
 app.use("/api/v1/user", userRouter);
-app.use("/api/v1/user/company", companyRouter);
-app.use("/api/v1/user/job", jobRouter);
-app.use("/api/v1/user/application", applyRouter);
+app.use("/api/v1/company", companyRouter);
+app.use("/api/v1/job", jobRouter);
+app.use("/api/v1/application", applyRouter);
 
 // Serve frontend build
-app.use(express.static(path.join(_dirname, "frontend", "dist")));
+app.use(express.static(path.join(__rootdir, "frontend", "dist")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
+  res.sendFile(path.resolve(__rootdir, "frontend", "dist", "index.html"));
 });
 
-app.listen(3000, () => {
-  console.log("Backend running on http://localhost:3000");
+// Use Render-assigned PORT or 3000 locally
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
