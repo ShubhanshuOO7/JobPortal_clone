@@ -20,7 +20,7 @@ const express_1 = __importDefault(require("express"));
 const multer_1 = require("../middlewares/multer");
 const datauri_1 = __importDefault(require("../utils/datauri"));
 const cloudinary_1 = __importDefault(require("../utils/cloudinary"));
-exports.companyRouter = (0, express_1.default)();
+exports.companyRouter = express_1.default.Router();
 exports.companyRouter.use(express_1.default.json());
 exports.companyRouter.use((0, cookie_parser_1.default)());
 exports.companyRouter.use(middleware_1.userMiddleware);

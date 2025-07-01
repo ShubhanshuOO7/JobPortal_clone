@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.applyRouter = void 0;
 const express_1 = __importDefault(require("express"));
-exports.applyRouter = (0, express_1.default)();
+exports.applyRouter = express_1.default.Router();
 const middleware_1 = require("../middlewares/middleware");
 const client_1 = require("@prisma/client");
 exports.applyRouter.use(middleware_1.userMiddleware);

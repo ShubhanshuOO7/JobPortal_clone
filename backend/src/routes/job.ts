@@ -8,15 +8,15 @@ interface jobPost{
     title : string,
     description : string,
     requirements : string
-    salary : Number,
+    salary : number,
     location : string,
     jobType : string,
-    experience : Number,
+    experience : number,
     position : string
-    companyId : Number
+    companyId : number
 }
 interface customRequest extends Request{
-   id? : Number
+   id? : number
 }
 //admin
 jobRouter.post("/jobPost",userMiddleware,async(req:customRequest,res:Response)=>{

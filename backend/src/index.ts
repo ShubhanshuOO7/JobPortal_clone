@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import path from "path";
+import fs from "fs";
 import express, { Request, Response } from "express";
 import cors from "cors";
 
@@ -8,9 +9,11 @@ import { companyRouter } from "./routes/company";
 import { jobRouter } from "./routes/job";
 import { applyRouter } from "./routes/application";
 
+
 if (process.env.NODE_ENV !== "production") {
   dotenv.config();
 }
+
 
 const __rootdir = path.resolve(__dirname, "..", "..");
 
@@ -23,6 +26,7 @@ app.use(
   })
 );
 
+
 app.use(express.json());
 
 app.use("/api/v1/user", userRouter);
@@ -32,8 +36,15 @@ app.use("/api/v1/application", applyRouter);
 
 app.use(express.static(path.join(__rootdir, "frontend", "dist")));
 
-app.get("/*", (req: Request, res: Response) => {
-  res.sendFile(path.join(__rootdir, "frontend", "dist", "index.html"));
+
+app.get("*", (req: Request, res: Response) => {
+  const indexPath = path.resolve(__rootdir, "frontend", "dist", "index.html");
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    console.error("index.html NOT FOUND at path:", indexPath);
+    res.status(500).send("index.html not found");
+  }
 });
 
 const PORT = process.env.PORT || 3000;

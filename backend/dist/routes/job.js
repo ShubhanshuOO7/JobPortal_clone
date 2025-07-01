@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.jobRouter = void 0;
 const client_1 = require("@prisma/client");
 const express_1 = __importDefault(require("express"));
-exports.jobRouter = (0, express_1.default)();
+exports.jobRouter = express_1.default.Router();
 const middleware_1 = require("../middlewares/middleware");
 exports.jobRouter.use(express_1.default.json());
 exports.jobRouter.use(middleware_1.userMiddleware);
