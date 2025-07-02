@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import express,{request, Request,Response} from 'express'
-export const jobRouter = express();
+export const jobRouter = express.Router();
 import { userMiddleware } from '../middlewares/middleware';
 jobRouter.use(express.json());
 jobRouter.use(userMiddleware);

@@ -7,7 +7,7 @@ import { singleUpload } from '../middlewares/multer';
 import getDataUri from '../utils/datauri';
 import cloudinary from '../utils/cloudinary';
 import { log } from 'console';
- export const companyRouter = express();
+ export const companyRouter = express.Router();
 companyRouter.use(express.json());
 companyRouter.use(cookieParser());
 companyRouter.use(userMiddleware)

@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-export const applyRouter = express();
+export const applyRouter = express.Router();
 import { userMiddleware } from "../middlewares/middleware";
 import { Prisma, PrismaClient } from "@prisma/client";
 import {ApplicationStatus} from "@prisma/client"

@@ -2,7 +2,7 @@ import express,{Request,Response} from "express";
 import jwt from "jsonwebtoken";
 import {PrismaClient} from "@prisma/client"
 import { userMiddleware } from "../middlewares/middleware";
-export const userRouter = express();
+export const userRouter = express.Router();
 import bcrypt from "bcrypt";
 import cookieParser from "cookie-parser";
 import { json } from "body-parser";
