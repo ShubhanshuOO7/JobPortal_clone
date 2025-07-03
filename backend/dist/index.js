@@ -27,7 +27,7 @@ app.use("/api/v1/company", company_1.companyRouter);
 app.use("/api/v1/job", job_1.jobRouter);
 app.use("/api/v1/application", application_1.applyRouter);
 app.use(express_1.default.static(path_1.default.join(__rootdir, "frontend", "dist")));
-app.get("*", (req, res) => {
+app.get("/*", (req, res) => {
     const indexPath = path_1.default.resolve(__rootdir, "frontend", "dist", "index.html");
     if (fs_1.default.existsSync(indexPath)) {
         res.sendFile(indexPath);

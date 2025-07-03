@@ -37,7 +37,7 @@ app.use("/api/v1/application", applyRouter);
 app.use(express.static(path.join(__rootdir, "frontend", "dist")));
 
 
-app.get("*", (req: Request, res: Response) => {
+app.get("/*", (req: Request, res: Response) => {
   const indexPath = path.resolve(__rootdir, "frontend", "dist", "index.html");
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
