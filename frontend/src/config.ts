@@ -1,1 +1,1 @@
-export const USER_ENDPOINT = "https://jobportal-clone.onrender.com"
+export const USER_ENDPOINT = "https://jobportal-j9vm.onrender.com"

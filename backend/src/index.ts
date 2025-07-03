@@ -21,7 +21,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://jobportal-clone.onrender.com",
+    origin: "https://jobportal-j9vm.onrender.com",
     credentials: true,
   })
 );
