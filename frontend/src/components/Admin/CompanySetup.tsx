@@ -31,7 +31,7 @@ export const CompanySetup = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("name", input.name);
+    formData.append("companyName", input.name);
     formData.append("description", input.description);
     formData.append("website", input.website);
     formData.append("location", input.location);
@@ -42,7 +42,7 @@ export const CompanySetup = () => {
     try {
       setLoading(true);
       const res = await axios.put(
-        `${USER_ENDPOINT}/api/v1/user/company/update/${params.id}`,
+        `${USER_ENDPOINT}/api/v1/company/update/${params.id}`,
         formData,
         {
           headers: {
@@ -158,7 +158,7 @@ export const CompanySetup = () => {
               <Spinner />
             </Button>
           ) : (
-            <Button className="w-full my-4" onClick={submitHandler}>
+            <Button className="w-full my-4" type="submit">
               Update
             </Button>
           )}

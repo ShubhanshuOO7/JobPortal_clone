@@ -9,7 +9,7 @@ export const getAllCompany =()=>{
     useEffect(()=>{
         try {
             const fetchAllCompany = async()=>{
-                const res = await axios.get(`${USER_ENDPOINT}/api/v1/user/company/get`,{
+                const res = await axios.get(`${USER_ENDPOINT}/api/v1/company/get`,{
                     withCredentials : true,
                 })
                 if(res.data.success){

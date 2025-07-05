@@ -114,6 +114,7 @@ interface update{
 companyRouter.put('/update/:id',singleUpload,async(req:Request<update>,res)=>{
     const {companyName,description,website,location} = req.body
     const file = req.file;
+    console.log(file);
     // idhar cloudinary aayega
     const fileUri = getDataUri(file);
     const cloudResponse = await cloudinary.uploader.upload(fileUri?.content || "");

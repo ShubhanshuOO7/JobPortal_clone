@@ -18,7 +18,7 @@ const JobDescription = () => {
     useEffect(()=>{
         const fetchSingleJob = async()=>{
             try {
-                const res = await axios.get(`${USER_ENDPOINT}/api/v1/user/job/getJob/${jobId}`,{withCredentials: true});
+                const res = await axios.get(`${USER_ENDPOINT}/api/v1/job/getJob/${jobId}`,{withCredentials: true});
                 if(res.data.success){
                    setJob(res.data.jobs);
                 }
@@ -31,7 +31,7 @@ const JobDescription = () => {
 
     const applyJobHandler = async()=>{
       try {
-        const res = await axios.post(`${USER_ENDPOINT}/api/v1/user/application/applyJob/${jobId}`,{},{
+        const res = await axios.post(`${USER_ENDPOINT}/api/v1/application/applyJob/${jobId}`,{},{
           withCredentials : true,
         })
         if(res.data.success){

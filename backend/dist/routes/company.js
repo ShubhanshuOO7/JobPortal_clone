@@ -117,6 +117,7 @@ exports.companyRouter.get('/getById/:id', (req, res) => __awaiter(void 0, void 0
 exports.companyRouter.put('/update/:id', multer_1.singleUpload, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { companyName, description, website, location } = req.body;
     const file = req.file;
+    console.log(file);
     // idhar cloudinary aayega
     const fileUri = (0, datauri_1.default)(file);
     const cloudResponse = yield cloudinary_1.default.uploader.upload((fileUri === null || fileUri === void 0 ? void 0 : fileUri.content) || "");

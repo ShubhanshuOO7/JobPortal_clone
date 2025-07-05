@@ -19,7 +19,7 @@ const CompanyCreate = () => {
     const navigate = useNavigate();
     const registerNewCompany = async ()=>{
         try {
-            const res = await axios.post(`${USER_ENDPOINT}/api/v1/user/company/registration`,{companyName},{
+            const res = await axios.post(`${USER_ENDPOINT}/api/v1/company/registration`,{companyName},{
                 headers:{
                     "Content-Type": 'application/json'
                 },
@@ -32,7 +32,7 @@ const CompanyCreate = () => {
                 navigate(`/admin/companies/${companyId}`);
             }
         } catch (error) {
-            console.log(error)
+            toast.error(error?.response?.data?.message);
         }
     }
   return (

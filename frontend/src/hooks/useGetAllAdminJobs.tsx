@@ -8,7 +8,7 @@ export const getAllAdminJobs =()=>{
     useEffect(()=>{
         try {
             const fetchAllAdminJobs = async()=>{
-                const res = await axios.get(`${USER_ENDPOINT}/api/v1/user/job/getAdminJobs`,{
+                const res = await axios.get(`${USER_ENDPOINT}/api/v1/job/getAdminJobs`,{
                     withCredentials : true,
                 })
                 if(res.data.success){

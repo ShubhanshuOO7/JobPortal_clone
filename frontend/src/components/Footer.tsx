@@ -1,4 +1,4 @@
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from "react-icons/fa";
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaGithub, FaDiscord } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -29,16 +29,16 @@ const Footer = () => {
           <h3 className="text-lg font-semibold text-blue-400">Follow Us</h3>
           <div className="mt-2 flex space-x-4">
             <a href="#" className="hover:text-blue-400 text-xl">
-              <FaFacebookF />
+              <FaDiscord />
             </a>
-            <a href="#" className="hover:text-blue-400 text-xl">
+            <a href="https://x.com/Shubhanshu69973" className="hover:text-blue-400 text-xl">
               <FaTwitter />
             </a>
-            <a href="#" className="hover:text-blue-400 text-xl">
+            <a href="https://www.linkedin.com/in/shubh9999/" className="hover:text-blue-400 text-xl">
               <FaLinkedinIn />
             </a>
-            <a href="#" className="hover:text-blue-400 text-xl">
-              <FaInstagram />
+            <a href="https://github.com/ShubhanshuOO7" className="hover:text-blue-400 text-xl">
+              <FaGithub />
             </a>
           </div>
         </div>

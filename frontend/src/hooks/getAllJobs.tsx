@@ -9,7 +9,7 @@ export const getAllJobs =()=>{
     useEffect(()=>{
         try {
             const fetchAllJobs = async()=>{
-                const res = await axios.get(`${USER_ENDPOINT}/api/v1/user/job/get?keyword=${searchQuery}`,{
+                const res = await axios.get(`${USER_ENDPOINT}/api/v1/job/get?keyword=${searchQuery}`,{
                     withCredentials : true,
                 })
                 if(res.data.success){
